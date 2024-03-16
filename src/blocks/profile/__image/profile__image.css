@@ -7,7 +7,15 @@
   background-size: cover;
   background-position: center;
   margin: 0 29px 0 0;
+  /* overflow: hidden; */
 }
+
+/* .profile__image img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  object-position: center;
+} */
 
 @media screen and (max-width: 740px) {
   .profile__image {
