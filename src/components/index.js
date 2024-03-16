@@ -7,17 +7,17 @@
 import "../styles/index.css";
 import { initialCards } from "./cards.js";
 import { addCard } from "./cards.js";
-import { cardLike } from "./cards.js";
+import { likeCard } from "./cards.js";
 import { removeCard } from "./cards.js";
 import { openPopup } from "./modal.js";
 import { closePopup } from "./modal.js";
 import { openCard } from "./modal.js";
-import { addNewCard } from "./modal.js";
+import { addNewCard } from "./cards.js";
 
 const placesList = document.querySelector(".places__list");
 
 initialCards.forEach(function (card) {
-  card = addCard(card, removeCard, cardLike, openCard);
+  card = addCard(card, removeCard, likeCard, openCard);
   placesList.appendChild(card);
 });
 

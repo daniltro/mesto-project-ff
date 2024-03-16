@@ -1,7 +1,4 @@
 import { escHandler } from "./index.js";
-import { addCard, removeCard } from "./cards.js";
-import { cardLike } from "./cards.js";
-import { placesList, placeName, placeLink } from "./index.js";
 
 export function openPopup(popup) {
   popup.classList.add("popup_is-opened");
@@ -20,13 +17,13 @@ export function openCard(evt) {
   imageInPopup.src = evt.target.src;
 }
 
-export function addNewCard(evt) {
-  evt.preventDefault();
-  const card = {
-    name: placeName.value,
-    link: placeLink.value,
-  };
-  const cardClone = addCard(card, removeCard, cardLike, openCard);
-  placesList.prepend(cardClone);
-  closePopup(evt.target.closest(".popup"));
-}
+// export function addNewCard(evt) {
+//   evt.preventDefault();
+//   const card = {
+//     name: placeName.value,
+//     link: placeLink.value,
+//   };
+//   const cardClone = addCard(card, removeCard, likeCard, openCard);
+//   placesList.prepend(cardClone);
+//   closePopup(evt.target.closest(".popup"));
+// }
