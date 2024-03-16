@@ -1,8 +1,3 @@
-import { placesList, placeName, placeLink } from "./index.js";
-import { openCard } from "./modal.js";
-import { closePopup } from "./modal.js";
-
-
 export const initialCards = [
   {
     name: "Архыз",
@@ -46,6 +41,7 @@ export function addCard(card, callBackRemove, callBackLike, openPopup) {
   likeButton.addEventListener("click", callBackLike);
   const image = cardClone.querySelector(".card__image");
   image.addEventListener("click", openPopup);
+
   return cardClone;
 }
 
@@ -55,15 +51,4 @@ export function likeCard(evt) {
 
 export function removeCard(event) {
   event.target.closest(".places__item").remove();
-}
-
-export function addNewCard(evt) {
-  evt.preventDefault();
-  const card = {
-    name: placeName.value,
-    link: placeLink.value,
-  };
-  const cardClone = addCard(card, removeCard, likeCard, openCard);
-  placesList.prepend(cardClone);
-  closePopup(evt.target.closest(".popup"));
 }

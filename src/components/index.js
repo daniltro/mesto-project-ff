@@ -11,49 +11,48 @@ import { likeCard } from "./cards.js";
 import { removeCard } from "./cards.js";
 import { openPopup } from "./modal.js";
 import { closePopup } from "./modal.js";
-import { openCard } from "./modal.js";
-import { addNewCard } from "./cards.js";
 
 const placesList = document.querySelector(".places__list");
-
-initialCards.forEach(function (card) {
-  card = addCard(card, removeCard, likeCard, openCard);
-  placesList.appendChild(card);
-});
-
-// ----------------------------- модальные окна------------------------------------------------
-
 const editProfileButton = document.querySelector(".profile__edit-button");
 const addProfileButton = document.querySelector(".profile__add-button");
 const editProfilePopup = document.querySelector(".popup_type_edit");
 const newCardPopup = document.querySelector(".popup_type_new-card");
 const popupTypeImage = document.querySelector(".popup_type_image");
 const popups = document.querySelectorAll(".popup");
-
-export function escHandler(evt) {
-  console.log(evt.key);
-  if (evt.key === "Escape") {
-    if (editProfilePopup.classList.contains("popup_is-opened")) {
-      closePopup(editProfilePopup);
-    }
-    if (newCardPopup.classList.contains("popup_is-opened")) {
-      closePopup(newCardPopup);
-    }
-    if (popupTypeImage.classList.contains("popup_is-opened")) {
-      closePopup(popupTypeImage);
-    }
-  }
-}
-
 const formAddProfile = document.forms["new-place"];
 const placeName = formAddProfile.elements["place-name"];
 const placeLink = formAddProfile.elements["link"];
+const imagePopup = document.querySelector(".popup_type_image");
+const imageInPopup = imagePopup.querySelector(".popup__image");
+const popupCaption = imagePopup.querySelector(".popup__caption");
+const profileTitle = document.querySelector(".profile__title");
+const profileDescription = document.querySelector(".profile__description");
+const formEditProfile = document.forms["edit-profile"];
+const nameInput = document.querySelector(".popup__input_type_name");
+const jobInput = document.querySelector(".popup__input_type_description");
 
-export {placesList, placeName, placeLink};
+initialCards.forEach(function (card) {
+  card = addCard(card, removeCard, likeCard, openCard);
+  placesList.appendChild(card);
+});
+
+function addNewCard(evt) {
+  evt.preventDefault();
+  const card = {
+    name: placeName.value,
+    link: placeLink.value,
+  };
+  const cardClone = addCard(card, removeCard, likeCard, openCard);
+  placesList.prepend(cardClone);
+  closePopup(evt.target.closest(".popup"));
+}
 
 formAddProfile.addEventListener("submit", addNewCard);
 
 editProfileButton.addEventListener("click", () => {
+  formEditProfile.elements["name"].value = profileTitle.textContent;
+  formEditProfile.elements["description"].value =
+    profileDescription.textContent;
   openPopup(editProfilePopup);
 });
 
@@ -73,27 +72,20 @@ popups.forEach((popup) => {
   });
 });
 
-// -------------------- Редактирование имени и информации о себе-------------------------------------------------
-
-const profileTitle = document.querySelector(".profile__title");
-const profileDescription = document.querySelector(".profile__description");
-const formEditProfile = document.forms["edit-profile"];
-
-formEditProfile.elements["name"].value = profileTitle.textContent;
-formEditProfile.elements["description"].value = profileDescription.textContent;
-
-const nameInput = document.querySelector(".popup__input_type_name");
-const jobInput = document.querySelector(".popup__input_type_description");
-
 function handleFormSubmit(evt) {
   evt.preventDefault();
-
-  let name = nameInput.value;
-  let job = jobInput.value;
-
+  const name = nameInput.value;
+  const job = jobInput.value;
   profileTitle.textContent = name;
   profileDescription.textContent = job;
   closePopup(evt.target.closest(".popup"));
 }
 
 formEditProfile.addEventListener("submit", handleFormSubmit);
+
+function openCard(evt) {
+  openPopup(imagePopup);
+  imageInPopup.src = evt.target.src;
+  imageInPopup.alt = evt.target.alt;
+  popupCaption.textContent = evt.target.alt;
+}

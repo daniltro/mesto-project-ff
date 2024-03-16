@@ -1,5 +1,3 @@
-import { escHandler } from "./index.js";
-
 export function openPopup(popup) {
   popup.classList.add("popup_is-opened");
   document.addEventListener("keydown", escHandler);
@@ -10,20 +8,10 @@ export function closePopup(popup) {
   document.removeEventListener("keydown", escHandler);
 }
 
-export function openCard(evt) {
-  const imagePopup = document.querySelector(".popup_type_image");
-  const imageInPopup = imagePopup.querySelector(".popup__image");
-  openPopup(imagePopup);
-  imageInPopup.src = evt.target.src;
+function escHandler(evt) {
+  console.log(evt.key);
+  if (evt.key === "Escape") {
+    const openedPopup = document.querySelector(".popup_is-opened");
+    closePopup(openedPopup);
+  }
 }
-
-// export function addNewCard(evt) {
-//   evt.preventDefault();
-//   const card = {
-//     name: placeName.value,
-//     link: placeLink.value,
-//   };
-//   const cardClone = addCard(card, removeCard, likeCard, openCard);
-//   placesList.prepend(cardClone);
-//   closePopup(evt.target.closest(".popup"));
-// }
