@@ -19,9 +19,29 @@
   cursor: pointer;
 }
 
+.popup__button_disabled {
+  color: rgb(0, 0, 0);
+  border: 1px solid rgba(0, 0, 0);
+  opacity: .2;
+  background: #fff;
+}
+
+.popup__button:disabled:hover {
+  background: #fff;
+}
+
 @media screen and (max-width: 568px) {
   .popup__button {
     font-size: 14px;
     line-height: 17px;
   }
+}
+
+
+.delete__button_is-hidden {
+  display: none;
+}
+
+.popup__button-type-yes {
+  margin-top: 38px;
 }

@@ -21,3 +21,11 @@
   right: 0;
   z-index: 10;
 }
+
+.popup-content_type-delete {
+  min-height: min-content;
+}
+
+.popup-content_type_avatar {
+  min-height: 272px;
+}

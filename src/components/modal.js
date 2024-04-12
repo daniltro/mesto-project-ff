@@ -9,9 +9,9 @@ export function closePopup(popup) {
 }
 
 function escHandler(evt) {
-  console.log(evt.key);
   if (evt.key === "Escape") {
     const openedPopup = document.querySelector(".popup_is-opened");
     closePopup(openedPopup);
   }
 }
+
