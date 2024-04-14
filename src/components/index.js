@@ -10,7 +10,6 @@ import { removeData } from "./api.js";
 import { openPopup } from "./modal.js";
 import { closePopup } from "./modal.js";
 import { enableValidation } from "./validation.js";
-import { validationConfig } from "./validation.js";
 import { clearValidation } from "./validation.js";
 import { loadData } from "./api.js";
 import { saveUserName } from "./api.js";
@@ -28,7 +27,7 @@ const placeName = formAddProfile.elements["place-name"];
 const placeLink = formAddProfile.elements["link"];
 const imagePopup = document.querySelector(".popup_type_image");
 const imageInPopup = imagePopup.querySelector(".popup__image");
-const popupCaption = imagePopup.querySelector(".popup__caption");
+const imageCaption = imagePopup.querySelector(".popup__caption");
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 const formEditProfile = document.forms["edit-profile"];
@@ -36,11 +35,20 @@ const nameInput = document.querySelector(".popup__input_type_name");
 const jobInput = document.querySelector(".popup__input_type_description");
 const userAvatar = document.querySelector(".profile__image");
 const popupTypeDelete = document.querySelector(".popup_type-delete");
-const deleteYes = document.querySelector(".popup__button-type-yes");
+const buttonDeleteYes = document.querySelector(".popup__button-type-yes");
 const popupTypeAvatar = document.querySelector(".popup_type_avatar");
 const editAvatar = document.querySelector(".profile__image");
 const avatarImage = document.querySelector(".profile__image");
 const formTypeAvatar = document.forms["avatar"];
+
+ const validationConfig = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error_visible",
+};
 
 function addNewCard(evt) {
   evt.preventDefault();
@@ -55,15 +63,14 @@ function addNewCard(evt) {
     .then((res) => {
       const card = addCard(res, likeToServ, openCard, userId, openDeletePopup);
       placesList.prepend(card);
+      closePopup(newCardPopup);
     })
     .catch((err) => {
       console.log(err);
     })
     .finally(() => {
       renderLoading(submitButton, false);
-      closePopup(submitButton.closest(".popup"));
-      placeName.value = "";
-      placeLink.value = "";
+      formAddProfile.reset()
     });
 }
 
@@ -80,8 +87,6 @@ editProfileButton.addEventListener("click", () => {
 
 addProfileButton.addEventListener("click", () => {
   openPopup(newCardPopup);
-  formAddProfile.elements["place-name"].value = "";
-  formAddProfile.elements["link"].value = "";
   clearValidation(formAddProfile, validationConfig);
   clearValidation(formAddProfile, validationConfig);
 });
@@ -98,33 +103,33 @@ popups.forEach((popup) => {
   });
 });
 
-function handleFormSubmit(evt) {
+function handleFormEditProfileSubmit(evt) {
   evt.preventDefault();
   const submitButton = evt.submitter;
   renderLoading(submitButton, true);
   const name = nameInput.value;
   const job = jobInput.value;
   saveUserName(name, job)
-    .then(() => {
-      profileTitle.textContent = name;
-      profileDescription.textContent = job;
+    .then((res) => {
+      profileTitle.textContent = res.name;
+      profileDescription.textContent = res.about;
+      closePopup(editProfilePopup );
     })
     .catch((err) => {
       console.log(err);
     })
     .finally((evt) => {
       renderLoading(submitButton, false);
-      closePopup(submitButton.closest(".popup"));
     });
 }
 
-formEditProfile.addEventListener("submit", handleFormSubmit);
+formEditProfile.addEventListener("submit", handleFormEditProfileSubmit);
 
 function openCard(evt) {
   openPopup(imagePopup);
   imageInPopup.src = evt.target.src;
   imageInPopup.alt = evt.target.alt;
-  popupCaption.textContent = evt.target.alt;
+  imageCaption.textContent = evt.target.alt;
 }
 enableValidation(validationConfig);
 
@@ -161,15 +166,15 @@ loadData()
 
 let cardDelete;
 
-deleteYes.addEventListener("click", () => {
+buttonDeleteYes.addEventListener("click", () => {
   removeCard(cardDelete);
-  closePopup(popupTypeDelete);
 });
 
 function removeCard(cardElement) {
   removeData(cardElement.dataset.id)
     .then(() => {
       cardElement.remove();
+      closePopup(popupTypeDelete);
     })
     .catch((err) => {
       console.log(err);

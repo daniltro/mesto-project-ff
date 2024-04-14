@@ -38,6 +38,8 @@ export function saveUserName(name, about) {
       name: name,
       about: about,
     }),
+  }).then((res) => {
+    return checkResponse(res);
   });
 }
 
@@ -58,6 +60,8 @@ export function removeData(id) {
   return fetch(`${config.baseUrl}/cards/${id}`, {
     method: "DELETE",
     headers: config.headers,
+  }).then((res) => {
+    return checkResponse(res);
   });
 }
 
