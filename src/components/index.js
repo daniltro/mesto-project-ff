@@ -87,6 +87,7 @@ editProfileButton.addEventListener("click", () => {
 
 addProfileButton.addEventListener("click", () => {
   openPopup(newCardPopup);
+  formAddProfile.reset()
   clearValidation(formAddProfile, validationConfig);
   clearValidation(formAddProfile, validationConfig);
 });
@@ -189,6 +190,7 @@ function openDeletePopup(cardElement) {
 editAvatar.addEventListener("click", () => {
   openPopup(popupTypeAvatar);
   clearValidation(formTypeAvatar, validationConfig);
+  formTypeAvatar.reset()
 });
 
 function saveAvatar(popup) {
@@ -215,6 +217,7 @@ formTypeAvatar.addEventListener("submit", (evt) => {
   evt.preventDefault();
   renderLoading(evt.submitter, true);
   saveAvatar(popupTypeAvatar);
+
 });
 
 function renderLoading(button, isLoading) {
