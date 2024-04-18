@@ -50,6 +50,8 @@
               class="popup__input popup__input_type_name"
               placeholder="Имя"
               id="name-input"
+              pattern="^[a-zA-Zа-яА-Я\s\-]+$"
+              data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
               required
             />
             <span class="popup-input-error name-input-error"></span>
@@ -61,6 +63,10 @@
               class="popup__input popup__input_type_description"
               placeholder="Занятие"
               id="job-input"
+              pattern="^[a-zA-Zа-яА-Я\s\-]+$"
+
+              data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
+              
               required
             />
             <span class="popup-input-error job-input-error"></span>
