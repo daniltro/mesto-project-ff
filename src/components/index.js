@@ -41,7 +41,7 @@ const editAvatar = document.querySelector(".profile__image");
 const avatarImage = document.querySelector(".profile__image");
 const formTypeAvatar = document.forms["avatar"];
 
- const validationConfig = {
+const validationConfig = {
   formSelector: ".popup__form",
   inputSelector: ".popup__input",
   submitButtonSelector: ".popup__button",
@@ -54,6 +54,7 @@ function addNewCard(evt) {
   evt.preventDefault();
   const submitButton = evt.submitter;
   renderLoading(submitButton, true);
+
   const card = {
     name: placeName.value,
     link: placeLink.value,
@@ -61,7 +62,7 @@ function addNewCard(evt) {
 
   saveNewCard(card.name, card.link)
     .then((res) => {
-      const card = addCard(res, likeToServ, openCard, userId, openDeletePopup);
+      const card = addCard(res, {like: likeToServ, openPopup: openCard, handleDeleteCard: removeCard}, userId);
       placesList.prepend(card);
       closePopup(newCardPopup);
     })
@@ -70,7 +71,7 @@ function addNewCard(evt) {
     })
     .finally(() => {
       renderLoading(submitButton, false);
-      formAddProfile.reset()
+      formAddProfile.reset();
     });
 }
 
@@ -82,18 +83,15 @@ editProfileButton.addEventListener("click", () => {
     profileDescription.textContent;
   openPopup(editProfilePopup);
   clearValidation(formEditProfile, validationConfig);
-  clearValidation(formEditProfile, validationConfig);
 });
 
 addProfileButton.addEventListener("click", () => {
   openPopup(newCardPopup);
-  formAddProfile.reset()
-  clearValidation(formAddProfile, validationConfig);
+  formAddProfile.reset();
   clearValidation(formAddProfile, validationConfig);
 });
 
 popups.forEach((popup) => {
-  popup.classList.add("popup_is-animated");
   popup.addEventListener("click", (evt) => {
     if (evt.target === popup) {
       closePopup(evt.target.closest(".popup"));
@@ -114,7 +112,7 @@ function handleFormEditProfileSubmit(evt) {
     .then((res) => {
       profileTitle.textContent = res.name;
       profileDescription.textContent = res.about;
-      closePopup(editProfilePopup );
+      closePopup(editProfilePopup);
     })
     .catch((err) => {
       console.log(err);
@@ -134,6 +132,16 @@ function openCard(evt) {
 }
 enableValidation(validationConfig);
 
+
+loadData()
+  .then(([userData, cardData]) => {
+    loadUserName(userData);
+    loadCards(cardData);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
 let userId = "";
 
 const loadUserName = (userData) => {
@@ -147,50 +155,41 @@ const loadCards = (cardData) => {
   cardData.forEach(function (cardDataElem) {
     const card = addCard(
       cardDataElem,
-      likeToServ,
-      openCard,
-      userId,
-      openDeletePopup
+      {
+      like: likeToServ,
+      openPopup: openCard,
+      handleDeleteCard: removeCard},
+      userId
     );
     placesList.appendChild(card);
   });
 };
 
-loadData()
-  .then(([userData, cardData]) => {
-    loadUserName(userData);
-    loadCards(cardData);
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+let submitFormConfirm = () => {};
 
-let cardDelete;
-
-buttonDeleteYes.addEventListener("click", () => {
-  removeCard(cardDelete);
-});
-
-function removeCard(cardElement) {
-  removeData(cardElement.dataset.id)
+const removeCard = (cardId, cardElement) => {
+  submitFormConfirm = () => {
+    removeData(cardId)
     .then(() => {
       cardElement.remove();
       closePopup(popupTypeDelete);
     })
     .catch((err) => {
-      console.log(err);
+      console.log(err)
     });
-}
-
-function openDeletePopup(cardElement) {
-  cardDelete = cardElement;
+  }
   openPopup(popupTypeDelete);
 }
+
+buttonDeleteYes.addEventListener("click", (evt) => {
+    evt.preventDefault();
+    submitFormConfirm();
+  });
 
 editAvatar.addEventListener("click", () => {
   openPopup(popupTypeAvatar);
   clearValidation(formTypeAvatar, validationConfig);
-  formTypeAvatar.reset()
+  formTypeAvatar.reset();
 });
 
 function saveAvatar(popup) {
@@ -217,7 +216,6 @@ formTypeAvatar.addEventListener("submit", (evt) => {
   evt.preventDefault();
   renderLoading(evt.submitter, true);
   saveAvatar(popupTypeAvatar);
-
 });
 
 function renderLoading(button, isLoading) {
